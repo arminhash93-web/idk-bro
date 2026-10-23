@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f766e"><link rel="apple-touch-icon" href="icon-192.png">
+<title>یار خانه · Home Helper</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf7f1;--card:#fff;--ink:#2b2622;--muted:#7a6f66;--line:#e8dfd3;--hi:#0f766e;--hi-ink:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1815;--card:#26211d;--ink:#f1ebe3;--muted:#aaa095;--line:#3a332c;--hi:#2dd4bf;--hi-ink:#06201d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1815;--card:#26211d;--ink:#f1ebe3;--muted:#aaa095;--line:#3a332c;--hi:#2dd4bf;--hi-ink:#06201d;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 "Vazirmatn",Tahoma,system-ui,sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px;position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+#ttl{flex:1;font-size:1.15em}
+main{max-width:720px;margin:0 auto;padding:16px 14px 70px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;cursor:pointer;min-height:44px}
+button.go{background:var(--hi);color:var(--hi-ink);border-color:var(--hi);font-weight:700}
+input,textarea,select{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:44px;min-width:0}
+textarea{width:100%;min-height:90px}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.big{font-size:1.35em;font-weight:700}.muted{color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.row>input{flex:1 1 140px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:14px}
+.tile{background:hsl(var(--h) 70% 92%);color:#2b2622;border:0;border-radius:18px;padding:18px 8px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tile span{font-size:2em;line-height:1.2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tile{background:hsl(var(--h) 25% 24%);color:#f1ebe3}}
+:root[data-theme="dark"] .tile{background:hsl(var(--h) 25% 24%);color:#f1ebe3}
+ul{list-style:none;margin:0;padding:0}li{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+li .grow{flex:1;min-width:0;overflow-wrap:anywhere}li.done b{text-decoration:line-through;color:var(--muted)}
+input[type=checkbox]{width:24px;height:24px;accent-color:var(--hi)}
+.m{margin:10px 0;padding:10px 14px;border-radius:16px;white-space:pre-wrap;overflow-wrap:anywhere;max-width:90%}
+.m.u{background:var(--hi);color:var(--hi-ink);margin-inline-start:auto}.m.a{background:var(--card);border:1px solid var(--line)}
+#toast{position:fixed;inset-inline:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:14px;display:none;z-index:9}
+.meal{display:grid;grid-template-columns:90px 1fr 1fr;gap:6px;align-items:center;margin:6px 0}
+</style>
+</head>
+<body>
+<header><button id="hb" aria-label="Home">🏠</button><b id="ttl"></b><button id="fsb" aria-label="Text size">A</button><button id="lg"></button></header>
+<main id="main"></main>
+<div id="toast" role="status"></div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var TX={en:{app:"Home Helper",home:"Home",ask:"Ask AI",shop:"Shopping",rem:"Reminders",meals:"Meal plan",rec:"Recipes",bday:"Birthdays",money:"Expenses",notes:"Notes",set:"Settings",add:"Add",del:"Delete",item:"Item",what:"What?",when:"When",name:"Name",date:"Date",amount:"Amount",title:"Title",details:"Ingredients and steps",none:"Nothing here yet.",total:"Total",clear:"Clear checked items",days:"{n} days left",today2:"Today! 🎉",hello:"Hello! Here’s your day.",water:"Water today",cups:"glasses",remtoday:"Reminders today",nextb:"Next birthday",lunch:"Lunch",dinner:"Dinner",sug:"Suggest a menu with AI ✨",wait:"Thinking…",noai:"Add an AI key in Settings first.",err:"Something went wrong. Try again.",send:"Send",msgph:"Ask me anything…",newchat:"New chat",c_dinner:"Dinner ideas",c_trans:"Translate",c_write:"Write a message",c_health:"Health tips",c_kids:"Kids’ homework",p_dinner:"Give me 5 easy dinner ideas for tonight.",p_trans:"Translate to Persian: ",p_write:"Help me write a polite message about: ",p_health:"Give me simple, general health tips about: ",p_kids:"Help me explain this school topic to my child simply: ",lang:"Language",size:"Text size",theme:"Light / dark",aisec:"AI connection",prov:"Provider",key:"API key",model:"Model (optional)",save:"Save",test:"Test",saved:"Saved.",worked:"It works!",backup:"Backup",restore:"Restore",bkhelp:"Copy this text to keep your data safe. Paste a backup here and press Restore to load it.",notesph:"Write anything here…",keys:"Free keys: aistudio.google.com or console.groq.com",bad:"The AI rejected the request. Check the key in Settings.",net:"Couldn’t reach the AI. Check your internet.",web:"Persian recipes",websearch:"Type a dish name…",open:"Open",openask:"Ask AI for a recipe",p_rec:"Give me a simple Persian recipe for: ",mysite:"My favorite recipe website",sitehelp:"Paste a website address to open it with one tap.",book:"Recipe book",all:"All",savemine:"Save to my recipes",saved3:"Saved!",exen:"Explain in English",p_exen:"Translate this recipe into clear English:\n\n"},
+fa:{app:"یار خانه",home:"خانه",ask:"پرسش از هوش مصنوعی",shop:"فهرست خرید",rem:"یادآورها",meals:"برنامهٔ غذا",rec:"دستور پخت",bday:"تولدها",money:"هزینه‌ها",notes:"یادداشت‌ها",set:"تنظیمات",add:"افزودن",del:"حذف",item:"کالا",what:"چه کاری؟",when:"زمان",name:"نام",date:"تاریخ",amount:"مبلغ",title:"عنوان",details:"مواد لازم و طرز تهیه",none:"هنوز چیزی اضافه نشده.",total:"جمع کل",clear:"پاک کردن موارد انجام‌شده",days:"{n} روز مانده",today2:"امروز! 🎉",hello:"سلام! برنامهٔ امروز شما اینجاست.",water:"آب امروز",cups:"لیوان",remtoday:"یادآورهای امروز",nextb:"تولد بعدی",lunch:"ناهار",dinner:"شام",sug:"پیشنهاد منو با هوش مصنوعی ✨",wait:"در حال فکر کردن…",noai:"ابتدا در تنظیمات، کلید هوش مصنوعی را وارد کنید.",err:"مشکلی پیش آمد. دوباره امتحان کنید.",send:"ارسال",msgph:"هر چیزی بپرسید…",newchat:"گفتگوی جدید",c_dinner:"ایدهٔ شام",c_trans:"ترجمه",c_write:"نوشتن پیام",c_health:"نکات سلامتی",c_kids:"کمک به تکلیف بچه‌ها",p_dinner:"۵ ایدهٔ ساده برای شام امشب به من بده.",p_trans:"ترجمه کن به انگلیسی: ",p_write:"کمکم کن یک پیام مؤدبانه بنویسم دربارهٔ: ",p_health:"چند نکتهٔ ساده و عمومی سلامتی بگو دربارهٔ: ",p_kids:"کمکم کن این موضوع درسی را ساده به بچه توضیح بدهم: ",lang:"زبان",size:"اندازهٔ نوشته",theme:"روشن / تاریک",aisec:"اتصال هوش مصنوعی",prov:"سرویس",key:"کلید API",model:"مدل (اختیاری)",save:"ذخیره",test:"آزمایش",saved:"ذخیره شد.",worked:"کار می‌کند!",backup:"پشتیبان‌گیری",restore:"بازیابی",bkhelp:"این متن را برای نگه‌داشتن اطلاعات خود کپی کنید. برای بازگرداندن، پشتیبان را اینجا بچسبانید و «بازیابی» را بزنید.",notesph:"هر چه می‌خواهید اینجا بنویسید…",keys:"کلید رایگان: aistudio.google.com یا console.groq.com",bad:"هوش مصنوعی درخواست را نپذیرفت. کلید را در تنظیمات بررسی کنید.",net:"اتصال به هوش مصنوعی برقرار نشد. اینترنت را بررسی کنید.",web:"دستورهای ایرانی",websearch:"نام غذا را بنویسید…",open:"باز کردن",openask:"دستور پخت از هوش مصنوعی",p_rec:"یک دستور پخت ساده ایرانی بده برای: ",mysite:"سایت دستور پخت مورد علاقهٔ من",sitehelp:"آدرس یک سایت را بچسبانید تا با یک لمس باز شود.",book:"کتاب آشپزی",all:"همه",savemine:"ذخیره در دستورهای من",saved3:"ذخیره شد!",exen:"توضیح به انگلیسی",p_exen:"Translate this recipe into clear English:\n\n"}};
+var S={lang:"fa",fs:1,theme:"",wd:"",wn:0,L:{shop:[],rem:[],bday:[],money:[],rec:[]},meals:{},chat:[],notes:"",ai:{p:"",k:"",m:""}};
+try{var o=JSON.parse(localStorage.getItem("yarkhane")||"null");if(o)for(var k in o)S[k]=o[k]}catch(e){}
+function save(){try{localStorage.setItem("yarkhane",JSON.stringify(S))}catch(e){}}
+function fa(){return S.lang==="fa"}
+function nf(n){return Number(n).toLocaleString(fa()?"fa-IR":"en-US")}
+function t(k,n){var s=TX[S.lang][k]||TX.en[k]||k;return n==null?s:s.replace("{n}",nf(n))}
+function mk(g,c,x){var e=document.createElement(g);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function loc(){return fa()?"fa-IR-u-ca-persian":"en-US"}
+function iso(){return new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+function toast(x,ms){var e=$("toast");e.textContent=x;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display="none"},ms||4000)}
+function dl(w){var p=w.split("-"),n=new Date(),a=new Date(n.getFullYear(),+p[1]-1,+p[2]),b=new Date(n.getFullYear(),n.getMonth(),n.getDate());if(a<b)a=new Date(n.getFullYear()+1,+p[1]-1,+p[2]);return Math.round((a-b)/864e5)}
+var cur="home";
+function chrome(){var d=document.documentElement;d.lang=S.lang;d.dir=fa()?"rtl":"ltr";if(S.theme)d.setAttribute("data-theme",S.theme);document.body.style.fontSize=[15,17,20,24][S.fs]+"px";
+ $("ttl").textContent=cur==="home"?t("app"):t(cur);$("lg").textContent=fa()?"EN":"فا";$("hb").style.display=cur==="home"?"none":""}
+function go(id){cur=id;chrome();({home:home,ask:ask,meals:meals,notes:notes,set:settings,web:webv,book:book})[id]?({home:home,ask:ask,meals:meals,notes:notes,set:settings,web:webv,book:book})[id]():listView(id);window.scrollTo(0,0)}
+$("hb").onclick=function(){go("home")};
+$("lg").onclick=function(){S.lang=fa()?"en":"fa";save();go(cur)};
+$("fsb").onclick=function(){S.fs=(S.fs+1)%4;save();chrome()};
+
+/* home */
+function home(){var m=$("main");m.innerHTML="";var d=new Date(),c=mk("div","card"),
+ j=d.toLocaleDateString("fa-IR-u-ca-persian",{weekday:"long",day:"numeric",month:"long",year:"numeric"}),g=d.toLocaleDateString("en-US",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ c.appendChild(mk("div","muted",t("hello")));c.appendChild(mk("div","big",fa()?j:g));c.appendChild(mk("div","muted",fa()?g:j));m.appendChild(c);
+ var gr=mk("div","grid");[["ask","✨"],["shop","🛒"],["rem","⏰"],["meals","🍽️"],["rec","📖"],["web","🌐"],["book","📚"],["bday","🎂"],["money","💰"],["notes","📝"],["set","⚙️"]].forEach(function(x,i){var b=mk("button","tile");b.style.setProperty("--h",i*40);b.appendChild(mk("span","",x[1]));b.appendChild(mk("div","",t(x[0])));b.onclick=function(){go(x[0])};gr.appendChild(b)});m.appendChild(gr);
+ if(S.wd!==iso()){S.wd=iso();S.wn=0}
+ var w=mk("div","card");w.appendChild(mk("div","big","💧 "+t("water")));var r=mk("div","row"),mi=mk("button","","−"),pl=mk("button","go","+"),n=mk("b","big",nf(S.wn)+" "+t("cups"));
+ mi.onclick=function(){S.wn=Math.max(0,S.wn-1);save();home()};pl.onclick=function(){S.wn++;save();home()};r.appendChild(mi);r.appendChild(n);r.appendChild(pl);w.appendChild(r);m.appendChild(w);
+ var td=S.L.rem.filter(function(o){return o.w&&o.w.slice(0,10)===iso()&&!o.d});
+ if(td.length){var q=mk("div","card");q.appendChild(mk("div","big","⏰ "+t("remtoday")));td.forEach(function(o){q.appendChild(mk("div","",o.w.slice(11)+"  "+o.x))});m.appendChild(q)}
+ var bd=S.L.bday.slice().sort(function(a,b){return dl(a.w)-dl(b.w)})[0];
+ if(bd){var z=mk("div","card");z.appendChild(mk("div","big","🎂 "+t("nextb")));z.appendChild(mk("div","",bd.x+" · "+(dl(bd.w)?t("days",dl(bd.w)):t("today2"))));m.appendChild(z)}}
+
+/* lists */
+var SP={shop:{f:[["x","text"]],chk:1},rem:{f:[["x","text"],["w","datetime-local"]],chk:1},bday:{f:[["x","text"],["w","date"]]},money:{f:[["x","text"],["a","number"]]},rec:{f:[["x","text"],["b","area"]]}};
+var PH={shop:{x:"item"},rem:{x:"what",w:"when"},bday:{x:"name",w:"date"},money:{x:"what",a:"amount"},rec:{x:"title",b:"details"}};
+function askNotif(){try{if(window.Notification&&Notification.permission==="default")Notification.requestPermission()}catch(e){}}
+function listView(id){var sp=SP[id],m=$("main"),arr=S.L[id],ins={};m.innerHTML="";
+ var form=mk("div","row");
+ sp.f.forEach(function(f){var i=mk(f[1]==="area"?"textarea":"input");if(f[1]!=="area")i.type=f[1];i.placeholder=t(PH[id][f[0]]);i.setAttribute("aria-label",i.placeholder);ins[f[0]]=i;form.appendChild(i)});
+ var ab=mk("button","go",t("add"));ab.onclick=function(){var o={d:0};sp.f.forEach(function(f){o[f[0]]=ins[f[0]].value.trim()});if(!o.x||(id==="bday"&&!o.w))return;arr.push(o);save();if(id==="rem")askNotif();listView(id)};
+ form.appendChild(ab);m.appendChild(form);
+ var list=arr.map(function(o,i){return{o:o,i:i}});
+ if(id==="bday")list.sort(function(a,b){return dl(a.o.w)-dl(b.o.w)});if(id==="rem")list.sort(function(a,b){return(a.o.w||"9")>(b.o.w||"9")?1:-1});
+ var ul=mk("ul");
+ list.forEach(function(e){var o=e.o,li=mk("li",o.d?"done":"");
+  if(sp.chk){var c=mk("input");c.type="checkbox";c.checked=!!o.d;c.setAttribute("aria-label",o.x);c.onchange=function(){o.d=c.checked?1:0;save();listView(id)};li.appendChild(c)}
+  var tx=mk("div","grow");tx.appendChild(mk("b","",o.x));var sub="";
+  if(id==="rem"&&o.w)sub=new Date(o.w).toLocaleString(loc(),{dateStyle:"medium",timeStyle:"short"});
+  if(id==="bday")sub=new Date(o.w+"T00:00").toLocaleDateString(loc(),{day:"numeric",month:"long"})+" · "+(dl(o.w)?t("days",dl(o.w)):t("today2"));
+  if(id==="money"&&o.a)sub=nf(o.a);if(id==="rec")sub=o.b||"";
+  if(sub){var sd=mk("div","muted",sub);sd.style.whiteSpace="pre-wrap";tx.appendChild(sd)}
+  li.appendChild(tx);var x=mk("button","",t("del"));x.onclick=function(){arr.splice(e.i,1);save();listView(id)};li.appendChild(x);ul.appendChild(li)});
+ m.appendChild(ul);if(!arr.length)m.appendChild(mk("p","muted",t("none")));
+ if(id==="money")m.appendChild(mk("h3","",t("total")+": "+nf(arr.reduce(function(s,o){return s+(+o.a||0)},0))));
+ if(id==="shop"&&arr.some(function(o){return o.d})){var cl=mk("button","",t("clear"));cl.onclick=function(){S.L.shop=S.L.shop.filter(function(o){return!o.d});save();listView("shop")};m.appendChild(cl)}}
+setInterval(function(){var n=new Date(),hit=0;S.L.rem.forEach(function(o){if(o.w&&!o.d&&!o.n&&new Date(o.w)<=n){o.n=1;hit=1;toast("⏰ "+o.x,12000);try{if(window.Notification&&Notification.permission==="granted")new Notification(o.x)}catch(e){}}});if(hit)save()},20000);
+
+/* AI */
+var DEF={gemini:"gemini-flash-latest",groq:"llama-3.3-70b-versatile",openrouter:"meta-llama/llama-3.3-70b-instruct:free"},busy=0,
+SYS="You are a warm, patient helper for a busy mom. Always reply in the same language the user writes in (Persian or English). Keep answers short, clear and practical, with simple steps. For health questions give general information only and suggest seeing a doctor for anything serious.";
+function llm(msgs){var c=S.ai,m=c.m||DEF[c.p],u,h={"Content-Type":"application/json"},b;
+ if(c.p==="gemini"){u="https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(m)+":generateContent";h["x-goog-api-key"]=c.k;b={contents:msgs.map(function(x){return{role:x.role==="user"?"user":"model",parts:[{text:x.content}]}})}}
+ else{u=c.p==="groq"?"https://api.groq.com/openai/v1/chat/completions":"https://openrouter.ai/api/v1/chat/completions";h.Authorization="Bearer "+c.k;b={model:m,messages:msgs}}
+ return fetch(u,{method:"POST",headers:h,body:JSON.stringify(b)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw{code:r.status};return j})}).then(function(j){
+  var x=c.p==="gemini"?((((j.candidates||[])[0]||{}).content||{}).parts||[]).map(function(p){return p.text||""}).join(""):(((j.choices||[])[0]||{}).message||{}).content;if(!x)throw{};return x})}
+function ready(){if(S.ai.p&&S.ai.k)return true;toast(t("noai"),6000);return false}
+function aerr(e){return e instanceof TypeError?t("net"):(e&&(e.code===400||e.code===401||e.code===403))?t("bad"):t("err")}
+function ask(){var m=$("main");m.innerHTML="";var chips=mk("div","row"),ta=mk("textarea"),chat=mk("div");ta.placeholder=t("msgph");ta.style.minHeight="70px";
+ [["c_dinner","p_dinner"],["c_trans","p_trans"],["c_write","p_write"],["c_health","p_health"],["c_kids","p_kids"]].forEach(function(c){var b=mk("button","",t(c[0]));b.onclick=function(){ta.value=t(c[1]);ta.focus()};chips.appendChild(b)});
+ m.appendChild(chips);m.appendChild(chat);
+ function draw(extra){chat.innerHTML="";S.chat.forEach(function(x){chat.appendChild(mk("div","m "+(x.role==="user"?"u":"a"),x.content))});if(extra)chat.appendChild(mk("div","m a",extra));window.scrollTo(0,document.body.scrollHeight)}
+ function send(){var v=ta.value.trim();if(!v||busy||!ready())return;busy=1;S.chat.push({role:"user",content:v});ta.value="";draw(t("wait"));
+  var st=S.chat.length>11?S.chat.length-11:0,msgs=S.chat.slice(st).map(function(x){return{role:x.role,content:x.content}});msgs[0].content=SYS+"\n\n"+msgs[0].content;
+  llm(msgs).then(function(x){S.chat.push({role:"assistant",content:x})}).catch(function(e){S.chat.pop();toast(aerr(e),6000)}).then(function(){busy=0;S.chat=S.chat.slice(-30);save();draw()})}
+ draw();m.appendChild(ta);var r=mk("div","row"),sb=mk("button","go",t("send")),nb=mk("button","",t("newchat"));sb.onclick=send;nb.onclick=function(){S.chat=[];save();draw()};r.appendChild(sb);r.appendChild(nb);m.appendChild(r)}
+
+/* meals */
+function meals(){var m=$("main");m.innerHTML="";var st=mk("p","muted");
+ for(var i=0;i<7;i++)(function(i){var r=mk("div","meal"),d=new Date(2024,0,6+i),a=S.meals[i]||(S.meals[i]={l:"",d:""}),l=mk("input"),n=mk("input");
+  r.appendChild(mk("b","",d.toLocaleDateString(loc(),{weekday:"long"})));l.placeholder=t("lunch");n.placeholder=t("dinner");l.value=a.l;n.value=a.d;l.setAttribute("aria-label",t("lunch"));n.setAttribute("aria-label",t("dinner"));
+  l.oninput=function(){a.l=l.value;save()};n.oninput=function(){a.d=n.value;save()};r.appendChild(l);r.appendChild(n);m.appendChild(r)})(i);
+ var b=mk("button","go",t("sug"));b.onclick=function(){if(busy||!ready())return;busy=1;st.textContent=t("wait");
+  llm([{role:"user",content:SYS+"\n\nSuggest a simple weekly home-cooking menu (lunch and dinner for 7 days starting Saturday), familiar to Persian families. Reply in "+(fa()?"Persian":"English")+" as ONLY a JSON array of 7 objects like {\"l\":\"lunch dish\",\"d\":\"dinner dish\"}."}]).then(function(x){var a=JSON.parse(x.slice(x.indexOf("["),x.lastIndexOf("]")+1));for(var i=0;i<7;i++)S.meals[i]={l:String((a[i]||{}).l||""),d:String((a[i]||{}).d||"")};save();busy=0;meals()}).catch(function(e){busy=0;st.textContent=e instanceof SyntaxError?t("err"):aerr(e)})};
+ m.appendChild(b);m.appendChild(st)}
+
+/* Persian recipe websites */
+var DISH=[["Ghormeh sabzi","قورمه‌سبزی"],["Fesenjan","فسنجان"],["Tahchin","ته‌چین"],["Ash reshteh","آش رشته"],["Kuku sabzi","کوکو سبزی"],["Zereshk polo","زرشک‌پلو"],["Baghali polo","باقالی‌پلو"],["Kashk bademjan","کشک بادمجان"],["Gheymeh","قیمه"],["Sholeh zard","شله‌زرد"]];
+function open1(u){window.open(u,"_blank","noopener")}
+function gs(q){open1("https://www.google.com/search?q="+encodeURIComponent("طرز تهیه "+q))}
+function norm(u){u=u.trim();if(u&&!/^https?:\/\//i.test(u))u="https://"+u;return u}
+function webv(){var m=$("main");m.innerHTML="";
+ var r=mk("div","row"),i=mk("input"),ob=mk("button","go",t("open"));i.placeholder=t("websearch");i.setAttribute("aria-label",t("websearch"));
+ ob.onclick=function(){if(i.value.trim())gs(i.value.trim())};i.onkeydown=function(e){if(e.key==="Enter")ob.onclick()};r.appendChild(i);r.appendChild(ob);m.appendChild(r);
+ var g=mk("div","row");DISH.forEach(function(d){var b=mk("button","",fa()?d[1]:d[0]);b.onclick=function(){gs(d[1])};g.appendChild(b)});m.appendChild(g);
+ var ai=mk("button","",t("openask")+" ✨");ai.onclick=function(){var q=i.value.trim();go("ask");var ta=$("main").querySelector("textarea");if(ta){ta.value=t("p_rec")+q;ta.focus()}};m.appendChild(ai);
+ m.appendChild(mk("h3","",t("mysite")));m.appendChild(mk("p","muted",t("sitehelp")));
+ var r2=mk("div","row"),si=mk("input"),sv=mk("button","",t("save")),op=mk("button","go",t("open"));si.type="url";si.placeholder="https://";si.value=S.site||"";si.setAttribute("aria-label",t("mysite"));
+ sv.onclick=function(){S.site=norm(si.value);si.value=S.site;save()};op.onclick=function(){var u=norm(si.value||S.site||"");if(u)open1(u)};
+ r2.appendChild(si);r2.appendChild(sv);r2.appendChild(op);m.appendChild(r2)}
+
+/* recipe book */
+var CAT={k:["خورشت","Stews"],p:["پلو","Rice"],a:["آش و سوپ","Soups"],l:["غذای سبک","Light dishes"],b:["کباب","Kebab"],d:["دسر","Sweets"],h:["صبحانه","Breakfast"]};
+var R=[
+["k","قورمه‌سبزی","Ghormeh sabzi","گوشت خورشتی ۵۰۰ گرم، پیاز ۲ عدد، سبزی قورمه (جعفری، گشنیز، شنبلیله، تره) حدود ۵۰۰ گرم، لوبیا قرمز پخته ۱ لیوان، لیمو عمانی ۴ عدد، زردچوبه، نمک، فلفل، روغن","۱) پیاز خرد‌شده را با زردچوبه سرخ کنید و گوشت را اضافه کنید تا رنگش عوض شود. ۲) آب بریزید و ۱ ساعت بپزید. ۳) سبزی خرد‌شده را جدا در روغن تفت دهید تا عطرش بالا بیاید. ۴) سبزی، لوبیا و لیمو عمانی سوراخ‌شده را به خورشت اضافه کنید. ۵) ۱ تا ۱٫۵ ساعت دیگر روی حرارت کم بپزید تا جا بیفتد."],
+["k","فسنجان","Fesenjan","گردوی آسیاب‌شده ۲ لیوان، رب انار حدود ۱ لیوان، مرغ یا گوشت ۵۰۰ گرم، پیاز ۱ عدد، شکر، نمک، زردچوبه، روغن","۱) گردو را روی حرارت کم و هم‌زنان ۵ تا ۱۰ دقیقه بو بدهید، بدون اینکه بسوزد. ۲) پیاز و مرغ را با زردچوبه سرخ کنید. ۳) گردو و ۴ لیوان آب را اضافه کنید و ۱ ساعت با حرارت کم بپزید. ۴) رب انار و کمی شکر بریزید و ۴۵ دقیقه دیگر بپزید تا غلیظ و خوش‌طعم شود. ۵) مزه را با شکر یا رب انار تنظیم کنید."],
+["k","قیمه","Gheymeh","گوشت ۵۰۰ گرم، لپه ۱ لیوان، پیاز ۱ عدد، رب گوجه ۲ قاشق غذاخوری، لیمو عمانی ۳ عدد، سیب‌زمینی سرخ‌شده، زردچوبه، نمک","۱) لپه را ۱ ساعت خیس کنید. ۲) پیاز و گوشت را با زردچوبه سرخ کنید و رب را اضافه کنید. ۳) آب بریزید و ۱ ساعت بپزید. ۴) لپه و لیمو عمانی را اضافه کنید و ۱ ساعت دیگر بپزید. ۵) با سیب‌زمینی سرخ‌شده و برنج سرو کنید."],
+["p","چلو (برنج آبکش)","Steamed rice (chelow)","برنج ۳ لیوان، نمک، روغن یا کره، زعفران دم‌کرده","۱) برنج را بشویید و ۲ ساعت با نمک خیس کنید. ۲) در آب جوش ۸ تا ۱۰ دقیقه بجوشانید تا نیم‌پز شود، سپس آبکش کنید. ۳) ته قابلمه روغن و کمی آب بریزید و برنج را کوهی بریزید. ۴) دمکنی بگذارید و ۴۵ دقیقه با حرارت کم دم کنید. ۵) کمی از برنج را با زعفران مخلوط کنید و روی پلو بریزید."],
+["p","زرشک‌پلو با مرغ","Barberry rice with chicken","برنج ۳ لیوان، مرغ ۵۰۰ گرم، زرشک ۱ لیوان، پیاز ۱ عدد، شکر ۲ قاشق غذاخوری، زعفران، کره، نمک","۱) مرغ را با پیاز، نمک و زعفران بپزید تا آب آن کم شود. ۲) زرشک را بشویید و با کره و شکر ۱ تا ۲ دقیقه تفت دهید. ۳) برنج را مثل چلو بپزید. ۴) پلو را با زرشک مخلوط کنید و کنار مرغ سرو کنید."],
+["p","باقالی‌پلو","Dill and broad bean rice","برنج ۳ لیوان، باقالی پوست‌کنده ۲ لیوان، شوید خرد‌شده ۱ دسته، زعفران، روغن، نمک","۱) برنج را نیم‌پز کنید. ۲) باقالی را ۵ دقیقه جدا بجوشانید. ۳) ته قابلمه روغن بریزید و لایه‌لایه برنج، باقالی و شوید بریزید. ۴) ۴۵ دقیقه دم کنید. ۵) با مرغ یا ماهیچه سرو کنید."],
+["p","عدس‌پلو","Lentil rice","برنج ۳ لیوان، عدس ۱ لیوان، پیاز ۲ عدد، کشمش، خرما، زعفران، روغن، نمک","۱) عدس را نیم‌پز کنید. ۲) پیاز را سرخ کنید تا طلایی شود. ۳) برنج را نیم‌پز و آبکش کنید. ۴) لایه‌لایه برنج و عدس و پیاز داغ را بریزید و ۴۵ دقیقه دم کنید. ۵) کشمش و خرمای تفت‌داده را روی آن بپاشید."],
+["p","ته‌چین مرغ","Saffron chicken tahchin","برنج پخته ۳ لیوان، ماست ۱٫۵ لیوان، زرده تخم‌مرغ ۳ عدد، سینه مرغ پخته ۴۰۰ گرم، زعفران، روغن، نمک","۱) ماست، زرده، زعفران و نمک را مخلوط کنید و با برنج پخته ترکیب کنید. ۲) کف قالب روغن بمالید و نیمی از برنج را بریزید. ۳) مرغ ریش‌ریش‌شده را پخش کنید و بقیه برنج را روی آن فشار دهید. ۴) در فر ۱۸۰ درجه ۱ تا ۱٫۵ ساعت بپزید تا روی آن طلایی شود. ۵) ۱۰ دقیقه صبر کنید و برگردانید."],
+["a","آش رشته","Ash reshteh (noodle soup)","نخود، لوبیا و عدس هرکدام نیم لیوان، پیاز ۲ عدد، سبزی آش (اسفناج، جعفری، گشنیز، شوید) ۱ کیلو، رشته آش ۲۰۰ گرم، کشک، نعنا، زردچوبه","۱) حبوبات را از شب قبل خیس کنید و با ۸ لیوان آب ۱ ساعت بپزید. ۲) سبزی خرد‌شده را اضافه کنید و ۳۰ دقیقه بپزید. ۳) رشته را اضافه کنید و ۲۰ دقیقه هم بزنید تا جا بیفتد. ۴) پیاز داغ و نعنا داغ درست کنید. ۵) روی آش کشک، پیاز داغ و نعنا داغ بریزید."],
+["a","سوپ جو","Barley soup","جو پرک ۱ لیوان، مرغ ۲۰۰ گرم، هویج ۱ عدد، پیاز ۱ عدد، جعفری، شیر ۱ لیوان، نمک، فلفل","۱) پیاز و مرغ را با کمی آب بپزید. ۲) جو، هویج رنده‌شده و ۶ لیوان آب را اضافه کنید. ۳) ۴۰ دقیقه بپزید تا جو نرم شود. ۴) مرغ را ریش کنید و شیر و جعفری را اضافه کنید. ۵) ۵ دقیقه دیگر بجوشانید."],
+["a","آبگوشت","Abgoosht (lamb and chickpea stew)","گوشت با استخوان ۵۰۰ گرم، نخود ۱ لیوان، لوبیا چیتی نیم لیوان، پیاز ۱ عدد، سیب‌زمینی ۲ عدد، گوجه ۲ عدد، لیمو عمانی ۲ عدد، زردچوبه، نمک","۱) حبوبات را از شب قبل خیس کنید. ۲) پیاز، گوشت و زردچوبه را در ۸ لیوان آب بجوشانید و کف آن را بگیرید. ۳) نخود و لوبیا را اضافه کنید و ۲ ساعت بپزید. ۴) سیب‌زمینی، گوجه و لیمو عمانی را اضافه کنید و ۱ ساعت دیگر بپزید. ۵) آبگوشت را جدا و گوشت را کوبیده سرو کنید."],
+["l","کوکو سبزی","Kuku sabzi (herb frittata)","سبزی کوکو (جعفری، گشنیز، شوید، تره) ۲ دسته، تخم‌مرغ ۶ عدد، آرد ۱ قاشق غذاخوری، زردچوبه، نمک، زرشک و گردو","۱) سبزی را بشویید، خشک و ریز خرد کنید. ۲) تخم‌مرغ، آرد، ادویه و نمک را به سبزی اضافه کنید. ۳) ماهیتابه را روغنی کنید و مخلوط را بریزید. ۴) روی حرارت ملایم هر طرف ۷ تا ۸ دقیقه بپزید تا طلایی شود."],
+["l","کشک بادمجان","Kashk bademjan (eggplant dip)","بادمجان ۴ عدد، پیاز ۱ عدد، سیر ۴ حبه، کشک ۱ لیوان، گردو، نعنا خشک، روغن، نمک","۱) بادمجان را پوست بگیرید و در روغن سرخ یا کبابی کنید و له کنید. ۲) پیاز و سیر را سرخ کنید و بادمجان را اضافه کنید. ۳) کشک و کمی آب را اضافه کنید و ۱۰ دقیقه بپزید. ۴) نعنا داغ و گردو را روی آن بریزید."],
+["l","میرزاقاسمی","Mirza ghasemi","بادمجان کبابی ۴ عدد، گوجه ۳ عدد، سیر ۴ حبه، تخم‌مرغ ۲ عدد، زردچوبه، روغن، نمک","۱) بادمجان را کبابی و پوست‌گیری و ریز خرد کنید. ۲) سیر را در روغن تفت دهید و گوجه رنده‌شده را اضافه کنید. ۳) بادمجان و زردچوبه را اضافه کنید و ۱۰ دقیقه بپزید. ۴) تخم‌مرغ‌ها را اضافه کنید و هم بزنید تا جا بیفتد."],
+["l","کتلت","Kotlet (meat patties)","گوشت چرخ‌کرده ۳۰۰ گرم، سیب‌زمینی پخته ۱ عدد، پیاز رنده‌شده ۱ عدد، تخم‌مرغ ۱ عدد، نمک، فلفل، زردچوبه، روغن","۱) همه مواد را خوب ورز دهید. ۲) ۳۰ دقیقه در یخچال بگذارید. ۳) از مخلوط گلوله بردارید و شکل کتلت بدهید. ۴) در روغن داغ هر طرف ۴ تا ۵ دقیقه سرخ کنید."],
+["l","سالاد شیرازی","Shirazi salad","خیار ۳ عدد، گوجه ۳ عدد، پیاز ۱ عدد کوچک، آب لیمو، نعنا خشک، نمک، روغن زیتون","۱) خیار، گوجه و پیاز را ریز خرد کنید. ۲) نمک، نعنا، آب لیمو و روغن زیتون را اضافه کنید. ۳) هم بزنید و سرد سرو کنید."],
+["b","کباب کوبیده","Kebab koobideh","گوشت چرخ‌کرده ۵۰۰ گرم (با کمی دنبه یا چربی)، پیاز رنده‌شده و آب‌گرفته ۱ عدد، نمک، فلفل، زعفران","۱) پیاز، نمک و ادویه را با گوشت ۱۰ دقیقه خوب ورز دهید. ۲) ۱ ساعت در یخچال بگذارید. ۳) مخلوط را روی سیخ پهن بکشید و فشار دهید. ۴) روی ذغال یا ماهیتابه هر طرف ۴ تا ۵ دقیقه کباب کنید. ۵) با برنج و گوجه کبابی سرو کنید."],
+["b","جوجه‌کباب","Joojeh kebab","مرغ ۱ کیلو، پیاز رنده‌شده ۲ عدد، ماست نیم لیوان، آب لیمو، زعفران، نمک، فلفل","۱) مرغ را تکه‌تکه کنید. ۲) با پیاز، ماست، آب لیمو، زعفران و نمک مخلوط کنید. ۳) حداقل ۱۲ ساعت در یخچال بگذارید. ۴) مرغ را به سیخ بکشید. ۵) هر طرف ۸ تا ۱۰ دقیقه کباب کنید و حتماً از پخته بودن وسط آن مطمئن شوید."],
+["d","شله‌زرد","Sholeh zard (saffron rice pudding)","برنج ۱ لیوان، آب ۶ لیوان، شکر ۱٫۵ لیوان، زعفران، گلاب، کره، بادام و پسته","۱) برنج را بشویید و در آب بپزید تا کاملاً نرم شود. ۲) شکر و زعفران را اضافه کنید و ۲۰ دقیقه هم بزنید. ۳) کره و گلاب را اضافه کنید. ۴) ۱۰ دقیقه دیگر بپزید و در ظرف بریزید. ۵) بعد از سرد‌شدن با بادام و پسته تزیین کنید."],
+["h","املت گوجه","Tomato omelet","تخم‌مرغ ۳ عدد، گوجه ۲ عدد، پیاز ۱ عدد کوچک، روغن یا کره، نمک، فلفل","۱) پیاز را در روغن سرخ کنید. ۲) گوجه خرد‌شده را اضافه کنید و ۵ دقیقه بپزید. ۳) تخم‌مرغ‌ها را روی آن بشکنید و نمک بزنید. ۴) با حرارت ملایم بپزید تا سفیده‌ها جا بیفتد."]
+];
+function book(){var m=$("main");m.innerHTML="";var q=mk("input"),cs=mk("div","row"),box=mk("div"),sel="";q.placeholder=t("websearch");q.setAttribute("aria-label",t("websearch"));q.style.width="100%";
+ function draw(){box.innerHTML="";var f=q.value.trim().toLowerCase();
+  R.forEach(function(x){if(sel&&x[0]!==sel)return;if(f&&x[1].indexOf(f)<0&&x[2].toLowerCase().indexOf(f)<0)return;
+   var d=mk("details","card"),sm=mk("summary","",(fa()?x[1]:x[2])+" · "+CAT[x[0]][fa()?0:1]),body=mk("div"),out=mk("div","muted"),txt="مواد لازم:\n"+x[3]+"\n\nطرز تهیه:\n"+x[4].replace(/ (?=[۱-۹]\))/g,"\n");
+   sm.style.cssText="cursor:pointer;font-weight:700";body.textContent=txt;body.dir="rtl";body.style.cssText="white-space:pre-wrap;margin-top:8px";out.style.whiteSpace="pre-wrap";out.dir="ltr";
+   var r=mk("div","row"),sv=mk("button","go",t("savemine")),en=mk("button","",t("exen"));
+   sv.onclick=function(){S.L.rec.push({x:x[1],b:x[3]+"\n\n"+x[4],d:0});save();sv.textContent=t("saved3")};
+   en.onclick=function(){if(busy||!ready())return;busy=1;out.textContent=t("wait");llm([{role:"user",content:SYS+"\n\n"+t("p_exen")+txt}]).then(function(a){out.textContent=a}).catch(function(e){out.textContent=aerr(e)}).then(function(){busy=0})};
+   r.appendChild(sv);r.appendChild(en);d.appendChild(sm);d.appendChild(body);d.appendChild(r);d.appendChild(out);box.appendChild(d)});}
+ [["",t("all")]].concat(Object.keys(CAT).map(function(k){return[k,CAT[k][fa()?0:1]]})).forEach(function(c){var b=mk("button","",c[1]);b.onclick=function(){sel=c[0];draw()};cs.appendChild(b)});
+ q.oninput=draw;m.appendChild(q);m.appendChild(cs);m.appendChild(box);draw()}
+
+/* notes */
+function notes(){var m=$("main");m.innerHTML="";var ta=mk("textarea");ta.style.minHeight="55vh";ta.placeholder=t("notesph");ta.value=S.notes;ta.oninput=function(){S.notes=ta.value;save()};m.appendChild(ta)}
+
+/* settings */
+function settings(){var m=$("main");m.innerHTML="";
+ function sec(h){m.appendChild(mk("h3","",h))}function row(){var r=mk("div","row");m.appendChild(r);return r}
+ sec(t("lang"));var r=row();[["fa","فارسی"],["en","English"]].forEach(function(l){var b=mk("button",S.lang===l[0]?"go":"",l[1]);b.onclick=function(){S.lang=l[0];save();go("set")};r.appendChild(b)});
+ sec(t("size")+" / "+t("theme"));r=row();var sz=mk("button","","A+"),th=mk("button","",t("theme"));sz.onclick=function(){S.fs=(S.fs+1)%4;save();chrome()};th.onclick=function(){var dk=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dk?"light":"dark";save();chrome()};r.appendChild(sz);r.appendChild(th);
+ sec(t("aisec"));m.appendChild(mk("p","muted",t("keys")));r=row();var p=mk("select"),k=mk("input"),md=mk("input");
+ [["","—"],["gemini","Google Gemini"],["groq","Groq"],["openrouter","OpenRouter"]].forEach(function(x){var o=mk("option","",x[1]);o.value=x[0];p.appendChild(o)});p.value=S.ai.p;p.setAttribute("aria-label",t("prov"));
+ k.type="password";k.placeholder=t("key");k.value=S.ai.k;k.autocomplete="off";md.placeholder=t("model");md.value=S.ai.m;r.appendChild(p);r.appendChild(k);r.appendChild(md);
+ r=row();var sv=mk("button","go",t("save")),ts=mk("button","",t("test")),st=mk("span","muted");
+ sv.onclick=function(){S.ai={p:p.value,k:k.value.trim(),m:md.value.trim()};save();st.textContent=t("saved")};
+ ts.onclick=function(){sv.onclick();if(!ready())return;st.textContent=t("wait");llm([{role:"user",content:"Reply with just: ok"}]).then(function(){st.textContent=t("worked")}).catch(function(e){st.textContent=aerr(e)})};
+ r.appendChild(sv);r.appendChild(ts);r.appendChild(st);
+ sec(t("backup"));m.appendChild(mk("p","muted",t("bkhelp")));var bk=mk("textarea");bk.value=JSON.stringify(S,function(a,v){return a==="ai"?undefined:v});m.appendChild(bk);
+ var rb=mk("button","",t("restore"));rb.onclick=function(){try{var o=JSON.parse(bk.value);for(var a in o)if(a!=="ai")S[a]=o[a];save();go("home")}catch(e){toast(t("err"))}};m.appendChild(rb)}
+
+if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js").catch(function(){});
+go("home");
+})();
+</script>
+</body>
+</html>
